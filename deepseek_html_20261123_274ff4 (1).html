@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>枕枝 · 自由言论 · 博客论坛</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #f9f7f3;
+      --surface: #ffffff;
+      --border: #e9e3da;
+      --text-primary: #2e2b26;
+      --text-secondary: #6b655b;
+      --accent: #8b6b4f;
+      --accent-light: #f0e8e0;
+      --danger: #c0524a;
+      --danger-light: #fbeeed;
+      --shadow-sm: 0 4px 12px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.03);
+      --shadow-md: 0 12px 28px -8px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.03);
+      --radius-md: 20px;
+      --radius-sm: 14px;
+      --radius-full: 100px;
+      --font-display: 'Nunito', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      line-height: 1.5;
+      padding: 1.5rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .site-wrapper {
+      max-width: 1100px;
+      width: 100%;
+      background: var(--surface);
+      border-radius: 36px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .logo-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-left: 4px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: inherit;
+      font-size: 0.95rem;
+      transition: color 0.15s;
+      border-bottom: 1.5px solid transparent;
+      padding-bottom: 2px;
+      cursor: pointer;
+    }
+
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .forum-header {
+      background: linear-gradient(135deg, #fdfcf9 0%, #f6f1ea 100%);
+      border-radius: var(--radius-md);
+      padding: 1.8rem 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+    }
+
+    .forum-header h1 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 2rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .forum-header h1 span {
+      color: var(--accent);
+      background: linear-gradient(145deg, var(--accent) 0%, #a88663 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .forum-header p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .forum-stats {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.6);
+      padding: 0.35rem 0.9rem;
+      border-radius: 40px;
+      border: 1px solid var(--border);
+    }
+
+    .stat-item strong { color: var(--accent); }
+
+    /* 发帖区 */
+    .composer {
+      background: #fdfcf9;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 1.6rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .composer-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.05rem;
+    }
+
+    .composer-header .spark-icon {
+      background: var(--accent-light);
+      border-radius: 10px;
+      padding: 5px 8px;
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+
+    .draft-status {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: #a69c90;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .draft-status.show { opacity: 1; }
+    .draft-status .dot {
+      width: 6px; height: 6px;
+      background: #7fbf7f;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .nickname-row {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .nickname-input {
+      flex: 1;
+      min-width: 160px;
+      padding: 0.7rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      background: var(--surface);
+      transition: border 0.15s;
+    }
+
+    .nickname-input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .post-input {
+      width: 100%;
+      padding: 1rem 1.2rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      background: var(--surface);
+      color: var(--text-primary);
+      resize: vertical;
+      min-height: 110px;
+      transition: border 0.15s, box-shadow 0.15s;
+    }
+
+    .post-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(139,107,79,0.08);
+    }
+
+    .post-input::placeholder { color: #b8b0a6; }
+
+    .composer-tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.9rem;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .tool-buttons {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-tool {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 0.5rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s;
+      font-family: var(--font-body);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-tool:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .btn-publish {
+      background: var(--accent);
+      color: white;
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-full);
+      padding: 0.7rem 2rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn-publish:hover { background: #7a5c43; }
+    .btn-publish:active { transform: scale(0.98); }
+
+    /* 附件预览 */
+    .attach-preview {
+      display: flex;
+      gap: 0.6rem;
+      margin-top: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .attach-preview .thumb {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .attach-preview .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .attach-preview .thumb button {
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.55);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 0.7rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      touch-action: manipulation;
+    }
+
+    /* 帖子列表 */
+    .feed { display: flex; flex-direction: column; gap: 1.2rem; }
+
+    .post-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.4rem 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .post-card:hover { box-shadow: var(--shadow-md); }
+
+    .post-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .post-author {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-light), #e2d6c8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .author-info .name {
+      font-weight: 600;
+      font-size: 0.92rem;
+      color: var(--text-primary);
+    }
+
+    .author-info .time {
+      font-size: 0.75rem;
+      color: #a69c90;
+      margin-top: 1px;
+    }
+
+    .post-actions {
+      display: flex;
+      gap: 0.4rem;
+      opacity: 0.4;
+      transition: opacity 0.15s;
+    }
+
+    .post-card:hover .post-actions { opacity: 1; }
+
+    .icon-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 4px 6px;
+      border-radius: 8px;
+      color: var(--text-secondary);
+      transition: background 0.15s, color 0.15s;
+      line-height: 1;
+      touch-action: manipulation;
+    }
+
+    .icon-btn:hover { background: var(--bg); }
+    .icon-btn.delete:hover { background: var(--danger-light); color: var(--danger); }
+
+    .post-content {
+      font-size: 0.98rem;
+      color: var(--text-primary);
+      line-height: 1.65;
+      word-break: break-word;
+      white-space: pre-wrap;
+      margin-bottom: 0.9rem;
+    }
+
+    .post-image {
+      margin-bottom: 0.9rem;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      max-height: 420px;
+    }
+
+    .post-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+      max-height: 420px;
+      object-fit: cover;
+    }
+
+    .post-footer {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      border-top: 1px solid var(--border);
+      padding-top: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .post-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+      font-family: var(--font-body);
+      touch-action: manipulation;
+    }
+
+    .post-btn:hover { background: var(--bg); color: var(--accent); }
+    .post-btn.liked { color: var(--danger); }
+    .post-btn.liked:hover { background: var(--danger-light); }
+
+    /* 评论区 */
+    .comments {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--border);
+      display: none;
+    }
+
+    .comments.open { display: block; }
+
+    .comment-item {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 0.8rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .comment-item .avatar {
+      width: 30px;
+      height: 30px;
+      font-size: 0.8rem;
+    }
+
+    .comment-body {
+      flex: 1;
+      background: #faf8f5;
+      border-radius: 12px;
+      padding: 0.6rem 0.9rem;
+      border: 1px solid var(--border);
+    }
+
+    .comment-body .c-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.2rem;
+    }
+
+    .comment-body .c-name {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+    }
+
+    .comment-body .c-time {
+      font-size: 0.7rem;
+      color: #b8b0a6;
+    }
+
+    .comment-body .c-text {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      word-break: break-word;
+      white-space: pre-wrap;
+    }
+
+    .comment-input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.8rem;
+    }
+
+    .comment-input {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-full);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      background: var(--surface);
+      transition: border 0.15s;
+    }
+
+    .comment-input:focus { outline: none; border-color: var(--accent); }
+
+    .comment-send {
+      background: var(--accent);
+      border: none;
+      color: white;
+      border-radius: var(--radius-full);
+      padding: 0 1.2rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+      touch-action: manipulation;
+    }
+
+    .comment-send:hover { background: #7a5c43; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-secondary);
+      background: #fdfcf9;
+      border-radius: var(--radius-md);
+      border: 1px dashed var(--border);
+    }
+
+    .empty-state .emoji { font-size: 2.5rem; margin-bottom: 0.8rem; }
+    .empty-state p { font-size: 0.95rem; }
+
+    .divider {
+      border: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border), transparent);
+      margin: 2rem 0 1.5rem 0;
+    }
+
+    .share-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-top: 1rem;
+    }
+
+    .share-hint {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .share-buttons { display: flex; gap: 0.7rem; }
+
+    .share-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 0.5rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: background 0.15s, border 0.15s, color 0.15s;
+      font-family: var(--font-body);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      touch-action: manipulation;
+    }
+
+    .share-btn:hover {
+      background: var(--accent-light);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .copy-toast {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--text-primary);
+      color: white;
+      padding: 0.7rem 1.6rem;
+      border-radius: 60px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      box-shadow: var(--shadow-md);
+      z-index: 999;
+    }
+
+    .copy-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .hidden { display: none !important; }
+
+    /* 隐藏文件输入 —— 用视觉隐藏而非 display:none，保证移动端可点击 */
+    .visually-hidden-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 文生图弹层 */
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: rgba(46,43,38,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 1rem;
+      backdrop-filter: blur(3px);
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius-md);
+      padding: 1.8rem;
+      width: 100%;
+      max-width: 520px;
+      box-shadow: var(--shadow-md);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal h3 {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal p.hint {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.8rem;
+    }
+
+    .modal .prompt-input {
+      min-height: 80px;
+      margin-bottom: 0.8rem;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: flex-end;
+      margin-top: 1rem;
+    }
+
+    .modal-image-wrap {
+      margin-top: 1rem;
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f3efe9;
+    }
+
+    .modal-image-wrap img { width: 100%; display: block; }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 1.2rem;
+      height: 1.2rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    .loading-spinner-lg {
+      width: 2.4rem;
+      height: 2.4rem;
+      border: 3px solid var(--accent-light);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 880px) {
+      .site-wrapper { padding: 1.8rem 1.4rem; border-radius: 28px; }
+      .nav-links { gap: 1.2rem; }
+      .forum-header h1 { font-size: 1.6rem; }
+      .top-nav { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 0.8rem; }
+      .site-wrapper { padding: 1.4rem 1rem; border-radius: 24px; }
+      .forum-header { padding: 1.4rem 1.2rem; }
+      .post-card { padding: 1.1rem 1.1rem; }
+      .composer { padding: 1.2rem 1.1rem; }
+      .share-section { flex-direction: column; align-items: flex-start; }
+      .composer-tools { flex-direction: column; align-items: stretch; }
+      .btn-publish { justify-content: center; }
+      .tool-buttons { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="site-wrapper">
+    <header class="top-nav">
+      <div class="logo">
+        <span>枕枝</span>
+        <span class="logo-dot"></span>
+      </div>
+      <div class="nav-links">
+        <a class="active" data-scroll="forum">论坛</a>
+        <a data-scroll="composer">发帖</a>
+        <a data-scroll="feed">最新</a>
+        <a id="shareNav">分享</a>
+      </div>
+    </header>
+
+    <main>
+      <div class="forum-header" id="forum">
+        <h1>枕枝 <span>博客论坛</span></h1>
+        <p>自由发表言论 · 分享灵感 · 记录日常。内容保存在浏览器本地，草稿自动保存，刷新不丢失。</p>
+        <div class="forum-stats">
+          <div class="stat-item">📝 帖子 <strong id="statPosts">0</strong></div>
+          <div class="stat-item">💬 评论 <strong id="statComments">0</strong></div>
+          <div class="stat-item">👍 点赞 <strong id="statLikes">0</strong></div>
+        </div>
+      </div>
+
+      <!-- 发帖区 -->
+      <div class="composer" id="composer">
+        <div class="composer-header">
+          <span class="spark-icon">✍️</span>
+          <span>发表新帖</span>
+          <span class="draft-status" id="draftStatus"><span class="dot"></span> 草稿已保存</span>
+        </div>
+        <div class="nickname-row">
+          <input type="text" id="nicknameInput" class="nickname-input" placeholder="你的昵称（默认：枕枝客）" maxlength="20">
+        </div>
+        <textarea id="postInput" class="post-input" placeholder="分享你的想法、灵感或日常…（支持换行，自动保存草稿）" maxlength="2000"></textarea>
+        <div class="attach-preview hidden" id="attachPreview"></div>
+        <div class="composer-tools">
+          <div class="tool-buttons">
+            <!-- 用 label 关联 input，移动端最可靠 -->
+            <label for="hiddenFileInput" class="btn-tool" id="attachBtnLabel" style="margin:0;">
+              🖼️ 插入图片
+            </label>
+            <button class="btn-tool" id="aiGenBtn" type="button">✨ AI 配图</button>
+          </div>
+          <button class="btn-publish" id="publishBtn">发布帖子</button>
+        </div>
+      </div>
+
+      <div class="feed" id="feed"></div>
+
+      <hr class="divider">
+
+      <div class="share-section">
+        <div class="share-hint"><span>🔗</span> 分享这个论坛，让更多人加入讨论</div>
+        <div class="share-buttons">
+          <button class="share-btn" id="copyLinkBtn">📋 复制链接</button>
+          <button class="share-btn" id="shareBtn">📤 系统分享</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 隐藏文件输入：使用视觉隐藏 + label 关联，移动端可正常调起相册/相机 -->
+  <input type="file" id="hiddenFileInput" accept="image/*" class="visually-hidden-input" aria-hidden="true">
+
+  <!-- 文生图弹层 -->
+  <div class="modal-mask hidden" id="aiModal">
+    <div class="modal">
+      <h3><span>✨</span> AI 生成配图</h3>
+      <p class="hint">用文字描述画面，AI 会生成一张图片并自动插入你的帖子。</p>
+      <textarea id="aiPromptInput" class="post-input prompt-input" placeholder="例如：a cat wearing a beret, watercolor illustration, soft cream tones">a cat wearing a beret, watercolor illustration, soft cream tones</textarea>
+      <div class="modal-image-wrap" id="aiModalImageWrap">
+        <span style="color:#a69c90;font-size:0.85rem;padding:1rem;text-align:center;">生成后图片将显示在这里</span>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-tool" id="aiCancelBtn" type="button">取消</button>
+        <button class="btn-tool" id="aiGenerateBtn" type="button">生成</button>
+        <button class="btn-publish" id="aiUseBtn" type="button" style="display:none;">插入帖子</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="copyToast" class="copy-toast">链接已复制</div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ==================== 存储键 ====================
+      const POSTS_KEY = 'zhenzhi_forum_posts_v1';
+      const NICKNAME_KEY = 'zhenzhi_forum_nickname_v1';
+      const DRAFT_KEY = 'zhenzhi_forum_draft_v1';
+
+      let posts = loadPosts();
+      let pendingAttachImage = null;
+      let aiModalImageUrl = null;
+      let draftTimer = null;
+
+      // ==================== 数据读写 ====================
+      function loadPosts() {
+        try {
+          const raw = localStorage.getItem(POSTS_KEY);
+          if (!raw) return [];
+          const data = JSON.parse(raw);
+          return Array.isArray(data) ? data : [];
+        } catch (e) { return []; }
+      }
+
+      function savePosts() {
+        try {
+          localStorage.setItem(POSTS_KEY, JSON.stringify(posts));
+        } catch (e) {
+          alert('保存失败：浏览器存储空间可能已满。请删除一些旧帖子或图片。');
+        }
+      }
+
+      function getNickname() {
+        const input = document.getElementById('nicknameInput');
+        const val = (input.value || '').trim();
+        if (val) {
+          try { localStorage.setItem(NICKNAME_KEY, val); } catch (e) {}
+          return val;
+        }
+        return '枕枝客';
+      }
+
+      function loadNickname() {
+        try {
+          const n = localStorage.getItem(NICKNAME_KEY);
+          if (n) document.getElementById('nicknameInput').value = n;
+        } catch (e) {}
+      }
+
+      // ==================== 草稿自动保存 ====================
+      function saveDraft() {
+        const nickname = document.getElementById('nicknameInput').value;
+        const content = document.getElementById('postInput').value;
+        const draft = { nickname, content, image: pendingAttachImage };
+        try {
+          localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+        } catch (e) {
+          // 图片过大可能存不下，降级只存文字
+          try {
+            localStorage.setItem(DRAFT_KEY, JSON.stringify({ nickname, content, image: null }));
+          } catch (e2) {}
+        }
+        showDraftStatus();
+      }
+
+      function loadDraft() {
+        try {
+          const raw = localStorage.getItem(DRAFT_KEY);
+          if (!raw) return;
+          const draft = JSON.parse(raw);
+          if (draft.nickname) document.getElementById('nicknameInput').value = draft.nickname;
+          if (draft.content) document.getElementById('postInput').value = draft.content;
+          if (draft.image) {
+            pendingAttachImage = draft.image;
+            renderAttachPreview();
+          }
+        } catch (e) {}
+      }
+
+      function clearDraft() {
+        try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+      }
+
+      function showDraftStatus() {
+        const el = document.getElementById('draftStatus');
+        if (!el) return;
+        el.classList.add('show');
+        clearTimeout(draftTimer);
+        draftTimer = setTimeout(() => {
+          el.classList.remove('show');
+        }, 1800);
+      }
+
+      // 输入时防抖保存
+      let saveDebounce = null;
+      function scheduleSaveDraft() {
+        clearTimeout(saveDebounce);
+        saveDebounce = setTimeout(saveDraft, 400);
+      }
+
+      // ==================== 渲染 ====================
+      const feedEl = document.getElementById('feed');
+      const statPostsEl = document.getElementById('statPosts');
+      const statCommentsEl = document.getElementById('statComments');
+      const statLikesEl = document.getElementById('statLikes');
+
+      function renderStats() {
+        const totalComments = posts.reduce((s, p) => s + (p.comments ? p.comments.length : 0), 0);
+        const totalLikes = posts.reduce((s, p) => s + (p.likes || 0), 0);
+        statPostsEl.textContent = posts.length;
+        statCommentsEl.textContent = totalComments;
+        statLikesEl.textContent = totalLikes;
+      }
+
+      function formatTime(ts) {
+        const d = new Date(ts);
+        const now = new Date();
+        const diff = (now - d) / 1000;
+        if (diff < 60) return '刚刚';
+        if (diff < 3600) return Math.floor(diff / 60) + ' 分钟前';
+        if (diff < 86400) return Math.floor(diff / 3600) + ' 小时前';
+        if (diff < 86400 * 7) return Math.floor(diff / 86400) + ' 天前';
+        const pad = n => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      }
+
+      function firstChar(name) {
+        if (!name) return '?';
+        return name.trim().charAt(0).toUpperCase();
+      }
+
+      function renderFeed() {
+        if (!posts.length) {
+          feedEl.innerHTML = `
+            <div class="empty-state">
+              <div class="emoji">🌱</div>
+              <p>还没有帖子，来发表第一条言论吧。</p>
+            </div>`;
+          renderStats();
+          return;
+        }
+
+        const sorted = [...posts].sort((a, b) => b.createdAt - a.createdAt);
+        feedEl.innerHTML = sorted.map(renderPost).join('');
+
+        feedEl.querySelectorAll('[data-action]').forEach(el => {
+          el.addEventListener('click', handleFeedAction);
+        });
+        feedEl.querySelectorAll('[data-comment-submit]').forEach(el => {
+          el.addEventListener('click', handleCommentSubmit);
+        });
+        feedEl.querySelectorAll('.comment-input').forEach(el => {
+          el.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              submitComment(el.getAttribute('data-post-id'));
+            }
+          });
+        });
+
+        renderStats();
+      }
+
+      function renderPost(post) {
+        const liked = !!post.liked;
+        const comments = post.comments || [];
+        const commentsOpen = !!post._commentsOpen;
+
+        return `
+          <div class="post-card" data-post-id="${post.id}">
+            <div class="post-head">
+              <div class="post-author">
+                <div class="avatar">${escapeHtml(firstChar(post.author))}</div>
+                <div class="author-info">
+                  <div class="name">${escapeHtml(post.author)}</div>
+                  <div class="time">${formatTime(post.createdAt)}</div>
+                </div>
+              </div>
+              <div class="post-actions">
+                <button class="icon-btn delete" data-action="delete" data-id="${post.id}" title="删除帖子">🗑️</button>
+              </div>
+            </div>
+            <div class="post-content">${escapeHtml(post.content)}</div>
+            ${post.image ? `<div class="post-image"><img src="${post.image}" alt="帖子配图" loading="lazy"></div>` : ''}
+            <div class="post-footer">
+              <button class="post-btn ${liked ? 'liked' : ''}" data-action="like" data-id="${post.id}">
+                ${liked ? '❤️' : '🤍'} 点赞 <span>${post.likes || 0}</span>
+              </button>
+              <button class="post-btn" data-action="toggle-comments" data-id="${post.id}">
+                💬 评论 <span>${comments.length}</span>
+              </button>
+            </div>
+            <div class="comments ${commentsOpen ? 'open' : ''}" data-comments-for="${post.id}">
+              ${comments.map(c => `
+                <div class="comment-item">
+                  <div class="avatar">${escapeHtml(firstChar(c.author))}</div>
+                  <div class="comment-body">
+                    <div class="c-head">
+                      <span class="c-name">${escapeHtml(c.author)}</span>
+                      <span class="c-time">${formatTime(c.createdAt)}</span>
+                    </div>
+                    <div class="c-text">${escapeHtml(c.content)}</div>
+                  </div>
+                </div>
+              `).join('')}
+              <div class="comment-input-row">
+                <input type="text" class="comment-input" data-post-id="${post.id}" placeholder="写下你的评论…" maxlength="500">
+                <button class="comment-send" data-comment-submit data-post-id="${post.id}">发送</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // ==================== 帖子交互 ====================
+      function handleFeedAction(e) {
+        const btn = e.currentTarget;
+        const action = btn.getAttribute('data-action');
+        const id = btn.getAttribute('data-id');
+        const post = posts.find(p => p.id === id);
+        if (!post) return;
+
+        if (action === 'like') {
+          post.liked = !post.liked;
+          post.likes = Math.max(0, (post.likes || 0) + (post.liked ? 1 : -1));
+          savePosts();
+          renderFeed();
+        } else if (action === 'toggle-comments') {
+          post._commentsOpen = !post._commentsOpen;
+          renderFeed();
+          if (post._commentsOpen) {
+            const input = feedEl.querySelector(`.comment-input[data-post-id="${id}"]`);
+            if (input) input.focus();
+          }
+        } else if (action === 'delete') {
+          if (confirm('确定删除这条帖子吗？')) {
+            posts = posts.filter(p => p.id !== id);
+            savePosts();
+            renderFeed();
+          }
+        }
+      }
+
+      function handleCommentSubmit(e) {
+        submitComment(e.currentTarget.getAttribute('data-post-id'));
+      }
+
+      function submitComment(postId) {
+        const post = posts.find(p => p.id === postId);
+        if (!post) return;
+        const input = feedEl.querySelector(`.comment-input[data-post-id="${postId}"]`);
+        if (!input) return;
+        const content = input.value.trim();
+        if (!content) return;
+        post.comments = post.comments || [];
+        post.comments.push({
+          id: 'c_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+          author: getNickname(),
+          content,
+          createdAt: Date.now()
+        });
+        post._commentsOpen = true;
+        savePosts();
+        renderFeed();
+      }
+
+      // ==================== 发帖 & 附件 ====================
+      const postInput = document.getElementById('postInput');
+      const nicknameInput = document.getElementById('nicknameInput');
+      const publishBtn = document.getElementById('publishBtn');
+      const attachPreview = document.getElementById('attachPreview');
+      const hiddenFileInput = document.getElementById('hiddenFileInput');
+
+      function renderAttachPreview() {
+        if (!pendingAttachImage) {
+          attachPreview.innerHTML = '';
+          attachPreview.classList.add('hidden');
+          return;
+        }
+        attachPreview.classList.remove('hidden');
+        attachPreview.innerHTML = `
+          <div class="thumb">
+            <img src="${pendingAttachImage}" alt="附件预览">
+            <button type="button" id="removeAttachBtn" title="移除">✕</button>
+          </div>`;
+        document.getElementById('removeAttachBtn').addEventListener('click', () => {
+          pendingAttachImage = null;
+          renderAttachPreview();
+          scheduleSaveDraft();
+        });
+      }
+
+      function publishPost() {
+        const content = postInput.value.trim();
+        if (!content && !pendingAttachImage) {
+          alert('写点什么，或者插入一张图片吧 ✨');
+          return;
+        }
+        const newPost = {
+          id: 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+          author: getNickname(),
+          content,
+          image: pendingAttachImage || null,
+          likes: 0,
+          liked: false,
+          comments: [],
+          createdAt: Date.now()
+        };
+        posts.push(newPost);
+        savePosts();
+
+        // 重置发帖区 + 清草稿
+        postInput.value = '';
+        pendingAttachImage = null;
+        renderAttachPreview();
+        clearDraft();
+        renderFeed();
+
+        setTimeout(() => {
+          const first = feedEl.querySelector('.post-card');
+          if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 60);
+      }
+
+      publishBtn.addEventListener('click', publishPost);
+      postInput.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          publishPost();
+        }
+      });
+
+      // 文件选择：label 已关联，这里只需处理 change
+      hiddenFileInput.addEventListener('change', e => {
+        const file = e.target.files && e.target.files[0];
+        hiddenFileInput.value = '';
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          alert('请选择图片文件');
+          return;
+        }
+        if (file.size > 6 * 1024 * 1024) {
+          alert('图片过大，建议小于 6MB');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = ev => {
+          pendingAttachImage = ev.target.result;
+          renderAttachPreview();
+          scheduleSaveDraft();
+        };
+        reader.onerror = () => alert('读取图片失败');
+        reader.readAsDataURL(file);
+      });
+
+      // 输入监听 → 自动保存草稿
+      nicknameInput.addEventListener('input', scheduleSaveDraft);
+      postInput.addEventListener('input', scheduleSaveDraft);
+
+      // ==================== AI 配图弹层 ====================
+      const aiGenBtn = document.getElementById('aiGenBtn');
+      const aiModal = document.getElementById('aiModal');
+      const aiPromptInput = document.getElementById('aiPromptInput');
+      const aiGenerateBtn = document.getElementById('aiGenerateBtn');
+      const aiCancelBtn = document.getElementById('aiCancelBtn');
+      const aiUseBtn = document.getElementById('aiUseBtn');
+      const aiModalImageWrap = document.getElementById('aiModalImageWrap');
+
+      function openAiModal() {
+        aiModal.classList.remove('hidden');
+        aiModalImageUrl = null;
+        aiUseBtn.style.display = 'none';
+        aiModalImageWrap.innerHTML = '<span style="color:#a69c90;font-size:0.85rem;padding:1rem;text-align:center;">生成后图片将显示在这里</span>';
+      }
+
+      function closeAiModal() { aiModal.classList.add('hidden'); }
+
+      aiGenBtn.addEventListener('click', openAiModal);
+      aiCancelBtn.addEventListener('click', closeAiModal);
+      aiModal.addEventListener('click', e => {
+        if (e.target === aiModal) closeAiModal();
+      });
+
+      function generateAiImage() {
+        const prompt = aiPromptInput.value.trim();
+        if (!prompt) { alert('请输入画面描述'); return; }
+
+        const originalHTML = aiGenerateBtn.innerHTML;
+        aiGenerateBtn.innerHTML = '<span class="loading-spinner" style="border-color:rgba(139,107,79,0.3);border-top-color:#8b6b4f;"></span> 生成中';
+        aiGenerateBtn.disabled = true;
+        aiUseBtn.style.display = 'none';
+        aiModalImageWrap.innerHTML = '<div class="loading-spinner-lg"></div>';
+
+        const encoded = encodeURIComponent(prompt);
+        const seed = Math.floor(Math.random() * 1000000);
+        const url = `https://image.pollinations.ai/prompt/${encoded}?width=800&height=520&seed=${seed}&nologo=true&enhance=true`;
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+
+        const timeout = setTimeout(() => {
+          img.src = '';
+          aiModalImageWrap.innerHTML = '<span style="color:#a69c90;font-size:0.85rem;padding:1rem;text-align:center;">生成超时，请重试</span>';
+          aiGenerateBtn.innerHTML = originalHTML;
+          aiGenerateBtn.disabled = false;
+        }, 45000);
+
+        img.onload = () => {
+          clearTimeout(timeout);
+          aiModalImageUrl = url;
+          aiModalImageWrap.innerHTML = `<img src="${url}" alt="AI 生成配图">`;
+          aiUseBtn.style.display = 'inline-flex';
+          aiGenerateBtn.innerHTML = originalHTML;
+          aiGenerateBtn.disabled = false;
+        };
+
+        img.onerror = () => {
+          clearTimeout(timeout);
+          aiModalImageWrap.innerHTML = '<span style="color:#a69c90;font-size:0.85rem;padding:1rem;text-align:center;">生成失败，请检查网络后重试</span>';
+          aiGenerateBtn.innerHTML = originalHTML;
+          aiGenerateBtn.disabled = false;
+        };
+
+        img.src = url;
+      }
+
+      aiGenerateBtn.addEventListener('click', generateAiImage);
+      aiPromptInput.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          generateAiImage();
+        }
+      });
+
+      aiUseBtn.addEventListener('click', () => {
+        if (!aiModalImageUrl) return;
+        pendingAttachImage = aiModalImageUrl;
+        renderAttachPreview();
+        closeAiModal();
+        postInput.focus();
+        scheduleSaveDraft();
+      });
+
+      // ==================== 导航 ====================
+      document.querySelectorAll('[data-scroll]').forEach(a => {
+        a.addEventListener('click', e => {
+          e.preventDefault();
+          const target = document.getElementById(a.getAttribute('data-scroll'));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+
+      // ==================== 分享 ====================
+      const copyLinkBtn = document.getElementById('copyLinkBtn');
+      const shareBtn = document.getElementById('shareBtn');
+      const shareNav = document.getElementById('shareNav');
+      const copyToast = document.getElementById('copyToast');
+
+      function showToast(msg) {
+        copyToast.textContent = msg || '链接已复制';
+        copyToast.classList.add('show');
+        setTimeout(() => copyToast.classList.remove('show'), 2000);
+      }
+
+      async function copyLink() {
+        const url = window.location.href;
+        try {
+          await navigator.clipboard.writeText(url);
+          showToast('链接已复制，分享给朋友吧');
+        } catch (err) {
+          const ta = document.createElement('textarea');
+          ta.value = url;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          showToast('链接已复制');
+        }
+      }
+
+      copyLinkBtn.addEventListener('click', copyLink);
+      shareNav.addEventListener('click', e => {
+        e.preventDefault();
+        document.querySelector('.share-section').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      shareBtn.addEventListener('click', async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: '枕枝 · 博客论坛',
+              text: '一个可自由发表言论的个人博客论坛，来聊聊吧。',
+              url: window.location.href,
+            });
+          } catch (err) {
+            if (err.name !== 'AbortError') copyLink();
+          }
+        } else {
+          copyLink();
+          showToast('浏览器不支持分享，已复制链接');
+        }
+      });
+
+      // ==================== 初始化 ====================
+      loadNickname();
+      loadDraft();
+      renderFeed();
+
+      // 页面即将关闭前再存一次草稿（保险）
+      window.addEventListener('beforeunload', () => {
+        clearTimeout(saveDebounce);
+        saveDraft();
+      });
+    })();
+  </script>
+</body>
+</html>
