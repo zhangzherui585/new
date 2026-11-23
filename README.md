@@ -401,7 +401,7 @@
   <script src="https://giscus.app/client.js"
           data-repo="https://github.com/zhangzherui585/new"
           data-repo-id="new"
-          data-category="Announcements"
+          data-category="0pen"
           data-category-id="main"
           data-mapping="pathname"
           data-strict="0"
