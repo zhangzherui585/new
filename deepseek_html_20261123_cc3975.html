@@ -399,7 +399,7 @@
        data-category-id → 分类ID
   ============================================================ -->
   <script src="https://giscus.app/client.js"
-          data-repo="https://github.com/zhangzherui585"
+          data-repo="https://github.com/zhangzherui585/new"
           data-repo-id="new"
           data-category="Announcements"
           data-category-id="main"
